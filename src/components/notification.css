@@ -1,0 +1,14 @@
+.notifications { max-width:800px; margin:18px auto; padding:12px }
+.notice { padding:12px; color:#666 }
+.notice-item { border:1px solid #e6e6e6; padding:10px; margin:8px 0; border-radius:6px; cursor:pointer; background:#fff }
+.notice-item.new { box-shadow: 0 0 0 3px rgba(0,120,212,0.05) }
+.notice-item.seen { opacity:0.7 }
+.notice-item .meta { display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px }
+.notice-item .msg { font-size:15px }
+.hint { color:#333; font-size:14px; margin-bottom:8px }
+.header { display:flex; align-items:center; justify-content:space-between; padding:12px 18px; border-bottom:1px solid #eee }
+.controls { display:flex; gap:10px; align-items:center }
+.controls input[type=number]{ width:64px }
+.controls select{ padding:4px }
+.active { background:#0366d6; color:#fff; border-radius:4px; padding:6px 10px }
+.footer { text-align:center; padding:12px; color:#888 }
