@@ -1,48 +1,80 @@
 import React, { useState } from 'react'
-import './App.css'
+import { AuthProvider, useAuth } from './context/AuthContext'
+import { logger } from './utils/logger'
+import LoginPage from './pages/LoginPage'
 import Sidebar from './components/Sidebar'
+import TopBar from './components/TopBar'
 import NotificationList from './components/NotificationList'
 import PriorityInbox from './components/PriorityInbox'
+import './App.css'
 
-function App() {
-  const [view, setView] = useState('all')
-  const [limit, setLimit] = useState(15)
+/* ── Inner app (rendered only when authenticated) ── */
+function Dashboard() {
+  const [view, setView]           = useState('all')
+  const [limit, setLimit]         = useState(15)
   const [filterType, setFilterType] = useState('')
+  const [unreadCount, setUnreadCount] = useState(0)
+
+  logger.debug('Dashboard', 'Render', { view, limit, filterType })
 
   return (
-    <div className="app-container">
-      <Sidebar view={view} setView={setView} />
-      
-      <div className="main-content">
-        <div className="top-bar">
-          <h1>Campus Notifications</h1>
-          <div className="filter-controls">
-            <label>
-              Type:
-              <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-                <option value="">(all types)</option>
-                <option value="Placement">Placement</option>
-                <option value="Result">Result</option>
-                <option value="Event">Event</option>
-              </select>
-            </label>
-            <label>
-              Limit:
-              <input type="number" min="1" max="100" value={limit} onChange={(e) => setLimit(Number(e.target.value) || 1)} />
-            </label>
-          </div>
-        </div>
+    <div className="app-shell">
+      <Sidebar
+        view={view}
+        setView={setView}
+        unreadCount={unreadCount}
+      />
 
-        <div className="content-area">
-          {view === 'all' ? (
-            <NotificationList limit={limit} notificationType={filterType} />
-          ) : (
-            <PriorityInbox limit={limit} notificationType={filterType} />
-          )}
+      <div className="main-area">
+        <TopBar
+          filterType={filterType}
+          setFilterType={setFilterType}
+          limit={limit}
+          setLimit={setLimit}
+        />
+
+        <div className="page-body">
+          <div className="page-heading">
+            <h1 id="page-title">
+              {view === 'all' ? 'Notifications' : 'Priority Inbox'}
+            </h1>
+            <p className="page-sub">
+              {view === 'all'
+                ? 'All your campus updates in one place'
+                : `Showing top ${limit} most important notifications`}
+            </p>
+          </div>
+
+          <div className="content-wrap">
+            {view === 'all' ? (
+              <NotificationList
+                limit={limit}
+                notificationType={filterType}
+                onUnreadCount={setUnreadCount}
+              />
+            ) : (
+              <PriorityInbox
+                limit={limit}
+                notificationType={filterType}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default App
+/* ── Root: show Login or Dashboard based on auth state ── */
+function Root() {
+  const { isAuthenticated } = useAuth()
+  return isAuthenticated ? <Dashboard /> : <LoginPage />
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Root />
+    </AuthProvider>
+  )
+}
