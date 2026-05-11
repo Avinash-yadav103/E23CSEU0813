@@ -1,44 +1,46 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import './App.css'
-import { fetchNotifications } from './utils/api'
-import PriorityInbox from './components/PriorityInbox'
+import Sidebar from './components/Sidebar'
 import NotificationList from './components/NotificationList'
+import PriorityInbox from './components/PriorityInbox'
 
 function App() {
-  const [view, setView] = useState('all') // 'all' or 'priority'
-  const [limit, setLimit] = useState(10)
+  const [view, setView] = useState('all')
+  const [limit, setLimit] = useState(15)
   const [filterType, setFilterType] = useState('')
 
   return (
-    <div className="app-root">
-      <header className="header">
-        <h1>Campus Notifications</h1>
-        <div className="controls">
-          <button onClick={() => setView('all')} className={view==='all'? 'active':''}>All</button>
-          <button onClick={() => setView('priority')} className={view==='priority'? 'active':''}>Priority</button>
-          <label>Limit:
-            <input type="number" min="1" value={limit} onChange={e=>setLimit(Number(e.target.value)||1)} />
-          </label>
-          <label>Filter type:
-            <select value={filterType} onChange={e=>setFilterType(e.target.value)}>
-              <option value="">(all)</option>
-              <option value="Placement">Placement</option>
-              <option value="Result">Result</option>
-              <option value="Event">Event</option>
-            </select>
-          </label>
+    <div className="app-container">
+      <Sidebar view={view} setView={setView} />
+      
+      <div className="main-content">
+        <div className="top-bar">
+          <h1>Campus Notifications</h1>
+          <div className="filter-controls">
+            <label>
+              Type:
+              <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+                <option value="">(all types)</option>
+                <option value="Placement">Placement</option>
+                <option value="Result">Result</option>
+                <option value="Event">Event</option>
+              </select>
+            </label>
+            <label>
+              Limit:
+              <input type="number" min="1" max="100" value={limit} onChange={(e) => setLimit(Number(e.target.value) || 1)} />
+            </label>
+          </div>
         </div>
-      </header>
 
-      <main>
-        {view === 'all' ? (
-          <NotificationList limit={limit} notificationType={filterType} />
-        ) : (
-          <PriorityInbox limit={limit} notificationType={filterType} />
-        )}
-      </main>
-
-      <footer className="footer">Runs on localhost:3000 — minimal implementation</footer>
+        <div className="content-area">
+          {view === 'all' ? (
+            <NotificationList limit={limit} notificationType={filterType} />
+          ) : (
+            <PriorityInbox limit={limit} notificationType={filterType} />
+          )}
+        </div>
+      </div>
     </div>
   )
 }
