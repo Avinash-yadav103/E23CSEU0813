@@ -9,7 +9,7 @@ const AuthContext = createContext(null)
  * The assignment states users are pre-authorised, so we simulate that here.
  */
 const DEMO_USERS = [
-  { username: 'student',  password: 'campus123', name: 'Alex Johnson',   token: 'demo-token-student-abc' },
+  { username: 'student',  password: 'campus123', name: 'Avinash Yadav',   token: 'demo-token-student-abc' },
   { username: 'admin',    password: 'admin123',  name: 'Anne Douglas',   token: 'demo-token-admin-xyz'   },
 ]
 
